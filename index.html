@@ -2,49 +2,158 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SwiftClapBack</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #fffafc;
+      color: #333;
+      margin: 0;
+      padding: 0 1rem;
+      max-width: 700px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 2rem;
+    }
+    .subheader {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #7a7a7a;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+    select, button {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+    }
+    .response {
+      background: #f0ecf4;
+      padding: 1rem;
+      margin-top: 1rem;
+      border-left: 5px solid #b89bc9;
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    .history {
+      margin-top: 2rem;
+      border-top: 1px solid #ddd;
+      padding-top: 1rem;
+    }
+    .lyric {
+      margin-top: 3rem;
+      font-style: italic;
+      text-align: center;
+      color: #888;
+    }
+  </style>
 </head>
 <body>
-  <h1>Welcome to SwiftClapBack</h1>
-  <p>Drop a rude comment below and choose your response style:</p>
+  <h1>SwiftClapBack</h1>
+  <p class="subheader">Tell me your mood and what kind of vibe you want for your reply. I've got you, queens and kings.</p>
 
-  <textarea id="userInput" rows="4" cols="50" placeholder="Type the comment here..."></textarea>
-  <br/><br/>
-  <label for="tone">Choose your vibe:</label>
+  <label for="comment">Drop your dramatic moment here:</label>
+  <textarea id="comment" placeholder="Paste the comment you received..."></textarea>
+
+  <label for="tone">Choose your comeback style:</label>
   <select id="tone">
     <option value="funny">Funny</option>
     <option value="snarky">Snarky</option>
     <option value="poetic">Poetic</option>
     <option value="gracious">Gracious</option>
-    <option value="empowered">Empowered</option>
-    <option value="hopeful">Hopeful</option>
-    <option value="chill">Chill</option>
-    <option value="mysterious">Mysterious</option>
+    <option value="elegant">Elegant</option>
+    <option value="empowering">Empowering</option>
+    <option value="melancholy">Melancholy</option>
+    <option value="defiant">Defiant</option>
   </select>
-  <br/><br/>
-  <button onclick="generateReply()">Get ClapBack</button>
 
-  <h2>Your Reply:</h2>
-  <p id="reply"></p>
+  <button onclick="generateReply()">Give me my Swift Clapback</button>
+
+  <div id="output" class="response" style="display: none;">
+    <button class="copy-btn" onclick="copyToClipboard()">Copy</button>
+    <p id="reply"></p>
+  </div>
+
+  <div class="history" id="history"></div>
+  <div class="lyric" id="lyric"></div>
 
   <script>
+    const history = [];
+    const lyrics = [
+      "Darling I'm a nightmare dressed like a daydream.",
+      "You could write a book on how to ruin someone's perfect day.",
+      "I shake it off.",
+      "The monsters turned out to be just trees.",
+      "Say you'll remember me, even if it's just pretend.",
+      "Rain came pouring down, when I was drowning, that's when I could finally breathe.",
+      "I've got a blank space, baby, and I'll write your name.",
+      "You got that James Dean daydream look in your eye."
+    ];
+
     function generateReply() {
-      const comment = document.getElementById('userInput').value;
+      const comment = document.getElementById('comment').value;
       const tone = document.getElementById('tone').value;
-      const replyBox = document.getElementById('reply');
 
-      if (!comment) {
-        replyBox.innerText = "Speak now... or forever hold your post.";
-        return;
-      }
+      if (!comment) return alert("Please paste a comment first!");
 
-      replyBox.innerText = `(${tone.toUpperCase()} Mode) ✨ Coming soon: Your SwiftClapBack...`;
+      const reply = `(${tone.toUpperCase()}) Taylor says: "${getMockReply(tone)}"`;
+      document.getElementById('reply').innerText = reply;
+      document.getElementById('output').style.display = 'block';
+
+      history.unshift(reply);
+      updateHistory();
+      showLyric();
+    }
+
+    function getMockReply(tone) {
+      const mock = {
+        funny: "Oh honey, if I had a dollar for every unsolicited opinion, I’d buy your silence.",
+        snarky: "I'm sorry, I didn't realize your ego needed so much airtime.",
+        poetic: "Like autumn leaves, your words fall... but I don't catch them.",
+        gracious: "Thank you for sharing. Not all gifts are useful, but I still accept them.",
+        elegant: "Your comment has been noted. Elegantly discarded.",
+        empowering: "Your doubt is my spark. Watch me light up.",
+        melancholy: "Some words echo longer than they should. But I'm walking forward.",
+        defiant: "Tell me I can't, and I’ll show you I did."
+      };
+      return mock[tone];
+    }
+
+    function copyToClipboard() {
+      const text = document.getElementById('reply').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Copied to clipboard!");
+      });
+    }
+
+    function updateHistory() {
+      const histEl = document.getElementById('history');
+      histEl.innerHTML = '<h3>Response History</h3>' +
+        history.map(r => `<div class='response' style='margin-top: 1rem;'>${r}</div>`).join('');
+    }
+
+    function showLyric() {
+      const random = lyrics[Math.floor(Math.random() * lyrics.length)];
+      document.getElementById('lyric').innerText = `"${random}"`;
     }
   </script>
-
-  <footer>
-    <p style="margin-top: 40px; font-style: italic;">I've got you, queens and kings.</p>
-  </footer>
 </body>
 </html>
