@@ -1,159 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SwiftClapBack</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #fffafc;
-      color: #333;
-      margin: 0;
-      padding: 0 1rem;
-      max-width: 700px;
-      margin: auto;
-    }
-    h1 {
-      text-align: center;
-      margin-top: 2rem;
-      font-size: 2rem;
-    }
-    .subheader {
-      text-align: center;
-      margin-bottom: 2rem;
-      color: #7a7a7a;
-    }
-    textarea {
-      width: 100%;
-      height: 100px;
-      margin-bottom: 1rem;
-      padding: 0.5rem;
-      font-size: 1rem;
-    }
-    select, button {
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      padding: 0.5rem;
-    }
-    .response {
-      background: #f0ecf4;
-      padding: 1rem;
-      margin-top: 1rem;
-      border-left: 5px solid #b89bc9;
-      position: relative;
-    }
-    .copy-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      font-size: 0.9rem;
-      color: #555;
-    }
-    .history {
-      margin-top: 2rem;
-      border-top: 1px solid #ddd;
-      padding-top: 1rem;
-    }
-    .lyric {
-      margin-top: 3rem;
-      font-style: italic;
-      text-align: center;
-      color: #888;
-    }
-  </style>
-</head>
-<body>
-  <h1>SwiftClapBack</h1>
-  <p class="subheader">Tell me your mood and what kind of vibe you want for your reply. I've got you, queens and kings.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SwiftClapBack</title>
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/2/2f/Taylor_Swift_signature.png" type="image/png">
+    <style>
+      :root {
+        --bg-light: #fdf6f9;
+        --text-light: #333;
+        --bg-dark: #1a1a1a;
+        --text-dark: #f5f5f5;
+        --accent: #d6336c;
+        --secondary: #555;
+      }
 
-  <label for="comment">Drop your dramatic moment here:</label>
-  <textarea id="comment" placeholder="Paste the comment you received..."></textarea>
+      body {
+        font-family: 'Helvetica Neue', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--bg-light);
+        color: var(--text-light);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        padding: 2rem;
+        transition: background-color 0.3s, color 0.3s;
+      }
 
-  <label for="tone">Choose your comeback style:</label>
-  <select id="tone">
-    <option value="funny">Funny</option>
-    <option value="snarky">Snarky</option>
-    <option value="poetic">Poetic</option>
-    <option value="gracious">Gracious</option>
-    <option value="elegant">Elegant</option>
-    <option value="empowering">Empowering</option>
-    <option value="melancholy">Melancholy</option>
-    <option value="defiant">Defiant</option>
-  </select>
+      body.dark-mode {
+        background-color: var(--bg-dark);
+        color: var(--text-dark);
+      }
 
-  <button onclick="generateReply()">Give me my Swift Clapback</button>
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
 
-  <div id="output" class="response" style="display: none;">
-    <button class="copy-btn" onclick="copyToClipboard()">Copy</button>
-    <p id="reply"></p>
-  </div>
+      .description {
+        font-size: 1.1rem;
+        max-width: 600px;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
 
-  <div class="history" id="history"></div>
-  <div class="lyric" id="lyric"></div>
+      textarea {
+        width: 90%;
+        max-width: 600px;
+        height: 100px;
+        padding: 1rem;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        border: 2px solid var(--accent);
+        border-radius: 8px;
+        resize: vertical;
+        background: transparent;
+        color: inherit;
+      }
 
-  <script>
-    const history = [];
-    const lyrics = [
-      "Darling I'm a nightmare dressed like a daydream.",
-      "You could write a book on how to ruin someone's perfect day.",
-      "I shake it off.",
-      "The monsters turned out to be just trees.",
-      "Say you'll remember me, even if it's just pretend.",
-      "Rain came pouring down, when I was drowning, that's when I could finally breathe.",
-      "I've got a blank space, baby, and I'll write your name.",
-      "You got that James Dean daydream look in your eye."
-    ];
+      .controls {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
 
-    function generateReply() {
-      const comment = document.getElementById('comment').value;
-      const tone = document.getElementById('tone').value;
+      button, select {
+        background-color: var(--accent);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
 
-      if (!comment) return alert("Please paste a comment first!");
+      button:hover, select:hover {
+        background-color: #b92d5a;
+      }
 
-      const reply = `(${tone.toUpperCase()}) Taylor says: "${getMockReply(tone)}"`;
-      document.getElementById('reply').innerText = reply;
-      document.getElementById('output').style.display = 'block';
+      .response-container {
+        width: 90%;
+        max-width: 600px;
+        margin-top: 2rem;
+      }
 
-      history.unshift(reply);
-      updateHistory();
-      showLyric();
-    }
+      .response {
+        background-color: rgba(214, 51, 108, 0.1);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 6px;
+        position: relative;
+      }
 
-    function getMockReply(tone) {
-      const mock = {
-        funny: "Oh honey, if I had a dollar for every unsolicited opinion, I’d buy your silence.",
-        snarky: "I'm sorry, I didn't realize your ego needed so much airtime.",
-        poetic: "Like autumn leaves, your words fall... but I don't catch them.",
-        gracious: "Thank you for sharing. Not all gifts are useful, but I still accept them.",
-        elegant: "Your comment has been noted. Elegantly discarded.",
-        empowering: "Your doubt is my spark. Watch me light up.",
-        melancholy: "Some words echo longer than they should. But I'm walking forward.",
-        defiant: "Tell me I can't, and I’ll show you I did."
-      };
-      return mock[tone];
-    }
+      .copy-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        padding: 0.25rem 0.5rem;
+        cursor: pointer;
+        border-radius: 4px;
+      }
 
-    function copyToClipboard() {
-      const text = document.getElementById('reply').innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Copied to clipboard!");
-      });
-    }
+      .lyric-footer {
+        margin-top: auto;
+        padding: 2rem;
+        font-style: italic;
+        color: var(--secondary);
+        text-align: center;
+      }
 
-    function updateHistory() {
-      const histEl = document.getElementById('history');
-      histEl.innerHTML = '<h3>Response History</h3>' +
-        history.map(r => `<div class='response' style='margin-top: 1rem;'>${r}</div>`).join('');
-    }
+      .share-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+        justify-content: center;
+      }
 
-    function showLyric() {
-      const random = lyrics[Math.floor(Math.random() * lyrics.length)];
-      document.getElementById('lyric').innerText = `"${random}"`;
-    }
-  </script>
-</body>
+      .share-buttons button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        border: 1px solid var(--accent);
+        background: none;
+        color: var(--accent);
+      }
+
+      @media (max-width: 600px) {
+        textarea, .response-container {
+          width: 100%;
+        }
+        .controls {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>SwiftClapBack</h1>
+    <p class="description">Drop your comment here. Choose your mood. Let me channel Taylor and serve a response worthy of the spotlight. I've got you queens and kings.</p>
+    <textarea id="input" placeholder="Paste a comment you need a clapback for..."></textarea>
+    <div class="controls">
+      <select id="mood">
+        <option value="lover">Lover</option>
+        <option value="reputation">Reputation</option>
+      </select>
+      <button onclick="generateClapback()">Clapback</button>
+      <button onclick="toggleDarkMode()">Toggle Theme</button>
+    </div>
+    <div class="response-container" id="responseContainer"></div>
+    <div class="share-buttons">
+      <button onclick="shareResponse('twitter')">Share on Twitter</button>
+      <button onclick="shareResponse('facebook')">Share on Facebook</button>
+    </div>
+    <div class="lyric-footer" id="lyricFooter"></div>
+
+    <script>
+      const responses = [
+        "Darling, I'm a nightmare dressed like a daydream.",
+        "You can walk away, but I’m still the queen of this story.",
+        "I don't have time for your mess — I'm busy shining.",
+        "If I showed up at your party, would you have something smart to say then?",
+        "The old me can't come to the phone right now... she's thriving.",
+        "I'm sorry, I only talk to people who sparkle.",
+        "Call it what you want, but I call it confidence.",
+        "Honey, your shade’s outdated and I’m out of patience."
+      ];
+
+      const lyrics = [
+        "I swear I don't love the drama, it loves me.",
+        "I remember it all too well.",
+        "Darling, I'm a nightmare dressed like a daydream.",
+        "We're happy, free, confused and lonely at the same time.",
+        "I've been the archer, I've been the prey.",
+        "I bury hatchets, but I keep maps of where I put them."
+      ];
+
+      function generateClapback() {
+        const container = document.getElementById("responseContainer");
+        container.innerHTML = "";
+        const shuffled = responses.sort(() => 0.5 - Math.random()).slice(0, 3);
+        shuffled.forEach((text) => {
+          const box = document.createElement("div");
+          box.className = "response";
+          box.innerHTML = `${text}<button class='copy-btn' onclick='copyToClipboard("${text}")'>Copy</button>`;
+          container.appendChild(box);
+        });
+        const lyric = lyrics[Math.floor(Math.random() * lyrics.length)];
+        document.getElementById("lyricFooter").textContent = `Random Lyric: \"${lyric}\"`;
+      }
+
+      function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => alert("Copied to clipboard!"));
+      }
+
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+      }
+
+      function shareResponse(platform) {
+        const container = document.getElementById("responseContainer");
+        const latest = container.querySelector(".response");
+        if (!latest) return alert("Generate a response first!");
+        const text = latest.textContent.replace("Copy", "").trim();
+        let url = "";
+        const encodedText = encodeURIComponent(text);
+        if (platform === "twitter") {
+          url = `https://twitter.com/intent/tweet?text=${encodedText}`;
+        } else if (platform === "facebook") {
+          url = `https://www.facebook.com/sharer/sharer.php?u=&quote=${encodedText}`;
+        }
+        window.open(url, '_blank');
+      }
+    </script>
+  </body>
 </html>
