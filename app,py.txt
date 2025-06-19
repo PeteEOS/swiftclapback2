@@ -1,0 +1,29 @@
+from flask import Flask, request, jsonify
+import pandas as pd
+import random
+
+app = Flask(__name__)
+
+# Load lyric data
+df = pd.read_csv('SwiftClapback_Lyric_Database.csv')
+df.dropna(subset=['lyric_phrase', 'sentiment'], inplace=True)
+
+@app.route('/get_clapbacks', methods=['POST'])
+def get_clapbacks():
+    data = request.get_json()
+    sentiment = data.get('sentiment', 'gracious')
+
+    # Filter and pick random phrases
+    filtered = df[df['sentiment'].str.lower() == sentiment.lower()]
+    if filtered.empty:
+        return jsonify({'responses': ["Style not found. Try something else."]})
+    choices = random.sample(filtered['lyric_phrase'].tolist(), min(3, len(filtered)))
+    return jsonify({'responses': choices})
+
+@app.route('/get_footer', methods=['GET'])
+def get_footer():
+    all_lyrics = df['lyric_phrase'].dropna().tolist()
+    return jsonify({'footer': random.choice(all_lyrics)})
+
+if __name__ == '__main__':
+    app.run(debug=True)
