@@ -148,12 +148,19 @@
     <p class="description">Drop your comment here. Choose your mood. Let me channel Taylor and serve a response worthy of the spotlight. I've got you queens and kings.</p>
     <textarea id="input" placeholder="Paste a comment you need a clapback for..."></textarea>
     <div class="controls">
-      <select id="mood">
-        <option value="lover">Lover</option>
-        <option value="reputation">Reputation</option>
-      </select>
       <button onclick="generateClapback()">Clapback</button>
-      <button onclick="toggleDarkMode()">Toggle Theme</button>
+      <select id="eraSelect" onchange="changeEra(this.value)">
+        <option value="default">Toggle Era</option>
+        <option value="debut">Debut</option>
+        <option value="fearless">Fearless</option>
+        <option value="speaknow">Speak Now</option>
+        <option value="red">Red</option>
+        <option value="1989">1989</option>
+        <option value="reputation">Reputation</option>
+        <option value="lover">Lover</option>
+        <option value="folklore">Folklore</option>
+        <option value="evermore">Evermore</option>
+      </select>
     </div>
     <div class="response-container" id="responseContainer"></div>
     <div class="share-buttons">
@@ -183,6 +190,18 @@
         "I bury hatchets, but I keep maps of where I put them."
       ];
 
+      const eraColors = {
+        debut: "#a8e6a3",
+        fearless: "#fdd835",
+        speaknow: "#b39ddb",
+        red: "#ef5350",
+        "1989": "#64b5f6",
+        reputation: "#212121",
+        lover: "#f8bbd0",
+        folklore: "#cfd8dc",
+        evermore: "#8d6e63"
+      };
+
       function generateClapback() {
         const container = document.getElementById("responseContainer");
         container.innerHTML = "";
@@ -194,15 +213,19 @@
           container.appendChild(box);
         });
         const lyric = lyrics[Math.floor(Math.random() * lyrics.length)];
-        document.getElementById("lyricFooter").textContent = `Random Lyric: \"${lyric}\"`;
+        document.getElementById("lyricFooter").textContent = lyric;
       }
 
       function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => alert("Copied to clipboard!"));
       }
 
-      function toggleDarkMode() {
-        document.body.classList.toggle("dark-mode");
+      function changeEra(era) {
+        if (eraColors[era]) {
+          document.body.style.backgroundColor = eraColors[era];
+        } else {
+          document.body.style.backgroundColor = "";
+        }
       }
 
       function shareResponse(platform) {
