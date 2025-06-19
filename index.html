@@ -1,230 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SwiftClapBack</title>
-    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/2/2f/Taylor_Swift_signature.png" type="image/png">
-    <style>
-      :root {
-        --bg-light: #fdf6f9;
-        --text-light: #333;
-        --bg-dark: #1a1a1a;
-        --text-dark: #f5f5f5;
-        --accent: #ffffff;
-        --accent-text: #000000;
-        --secondary: #555;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SwiftClapBack</title>
+  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/2/2f/Taylor_Swift_signature.png" type="image/png">
+  <style>
+    :root {
+      --bg-light: #fdf6f9;
+      --text-light: #333;
+      --bg-dark: #1a1a1a;
+      --text-dark: #f5f5f5;
+      --accent: #ffffff;
+      --accent-text: #000000;
+      --secondary: #555;
+    }
 
-      body {
-        font-family: 'Helvetica Neue', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: var(--bg-light);
-        color: var(--text-light);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 100vh;
-        padding: 2rem;
-        transition: background-color 0.3s, color 0.3s;
-      }
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-      body.dark-mode {
-        background-color: var(--bg-dark);
-        color: var(--text-dark);
-      }
+    h1 {
+      font-size: 12px;
+      margin-bottom: 1rem;
+      text-align: center;
+      white-space: pre-line;
+    }
 
-      h1 {
-        font-size: 12px;
-        margin-bottom: 1rem;
-        text-align: center;
-        white-space: pre-line;
-      }
+    .description {
+      font-size: 12px;
+      max-width: 600px;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: black;
+    }
 
-      .description {
-        font-size: 12px;
-        max-width: 600px;
-        text-align: center;
-        margin-bottom: 2rem;
-        color: black;
-      }
+    textarea {
+      width: 90%;
+      max-width: 600px;
+      height: 100px;
+      padding: 1rem;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      resize: vertical;
+      background: transparent;
+      color: inherit;
+    }
 
-      textarea {
-        width: 90%;
-        max-width: 600px;
-        height: 100px;
-        padding: 1rem;
-        font-size: 1rem;
-        margin-bottom: 1rem;
-        border: 2px solid var(--accent);
-        border-radius: 8px;
-        resize: vertical;
-        background: transparent;
-        color: inherit;
+    .controls {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    button, select {
+      background-color: var(--accent);
+      color: var(--accent-text);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover, select:hover {
+      background-color: #e0e0e0;
+    }
+
+    .response-container {
+      width: 90%;
+      max-width: 600px;
+      margin-top: 2rem;
+    }
+
+    .response {
+      background-color: rgba(214, 51, 108, 0.1);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      position: relative;
+    }
+
+    .meta {
+      font-size: 0.85rem;
+      color: #777;
+      margin-top: 0.5rem;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: 1px solid var(--accent-text);
+      color: var(--accent-text);
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .lyric-footer {
+      margin-top: auto;
+      padding: 2rem;
+      font-style: italic;
+      color: var(--secondary);
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      textarea, .response-container {
+        width: 100%;
       }
 
       .controls {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin-bottom: 1rem;
+        flex-direction: column;
       }
-
-      button, select {
-        background-color: var(--accent);
-        color: var(--accent-text);
-        border: none;
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-
-      button:hover, select:hover {
-        background-color: #e0e0e0;
-      }
-
-      .response-container {
-        width: 90%;
-        max-width: 600px;
-        margin-top: 2rem;
-      }
-
-      .response {
-        background-color: rgba(214, 51, 108, 0.1);
-        padding: 1rem;
-        margin-bottom: 1rem;
-        border-radius: 6px;
-        position: relative;
-      }
-
-      .meta {
-        font-size: 0.85rem;
-        color: #777;
-        margin-top: 0.5rem;
-      }
-
-      .copy-btn {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: none;
-        border: 1px solid var(--accent-text);
-        color: var(--accent-text);
-        padding: 0.25rem 0.5rem;
-        cursor: pointer;
-        border-radius: 4px;
-      }
-
-      .lyric-footer {
-        margin-top: auto;
-        padding: 2rem;
-        font-style: italic;
-        color: var(--secondary);
-        text-align: center;
-      }
-
-      @media (max-width: 600px) {
-        textarea, .response-container {
-          width: 100%;
-        }
-        .controls {
-          flex-direction: column;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Drop your comment here.
-
+    }
+  </style>
+</head>
+<body>
+  <h1>Drop your comment here.
 
 Choose your mood.
 
-
 Let me channel Taylor and serve a response worthy of the spotlight.</h1>
-    <p class="description">I've got you queens and kings.</p>
-    <textarea id="input" placeholder="Paste a comment you need a clapback for..."></textarea>
-    <div class="controls">
-      <button onclick="generateClapback()">Get Clapback</button>
-      <select id="clapbackType">
-        <option value="snarky">Snarky</option>
-        <option value="funny">Funny</option>
-        <option value="poetic">Poetic</option>
-        <option value="elegant">Elegant</option>
-        <option value="sassy">Sassy</option>
-        <option value="gracious">Gracious</option>
-        <option value="inspirational">Inspirational</option>
-        <option value="chill">Chill</option>
-      </select>
-      <select id="eraSelect" onchange="changeEra(this.value)">
-        <option value="default">Toggle Era</option>
-        <option value="debut">Debut</option>
-        <option value="fearless">Fearless</option>
-        <option value="speaknow">Speak Now</option>
-        <option value="red">Red</option>
-        <option value="1989">1989</option>
-        <option value="reputation">Reputation</option>
-        <option value="lover">Lover</option>
-        <option value="folklore">Folklore</option>
-        <option value="evermore">Evermore</option>
-      </select>
-    </div>
-    <div class="response-container" id="responseContainer"></div>
-    <div class="lyric-footer" id="lyricFooter"></div>
 
-    <script>
-      async function generateClapback() {
-        const container = document.getElementById("responseContainer");
-        container.innerHTML = "";
-        const sentiment = document.getElementById("clapbackType").value;
+  <p class="description">I've got you queens and kings.</p>
 
-        try {
-          const response = await fetch(`http://localhost:5000/generate?sentiment=${sentiment}`);
-          const data = await response.json();
+  <textarea id="input" placeholder="Paste a comment you need a clapback for..."></textarea>
 
-          if (data.responses && data.responses.length > 0) {
-            data.responses.forEach((text) => {
-              const box = document.createElement("div");
-              box.className = "response";
-              box.innerHTML = `${text}<div class='meta'>Style: ${sentiment}</div><button class='copy-btn' onclick='copyToClipboard("${text}")'>Copy</button>`;
-              container.appendChild(box);
-            });
-            document.getElementById("lyricFooter").textContent = data.footer;
-          } else {
-            container.innerHTML = "<p>No responses found. Try a different style.</p>";
-          }
-        } catch (err) {
-          container.innerHTML = `<p>Error fetching response: ${err.message}</p>`;
-        }
-      }
+  <div class="controls">
+    <button onclick="generateClapback()">Get Clapback</button>
 
-      function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => alert("Copied to clipboard!"));
-      }
+    <select id="clapbackType">
+      <option value="snarky">Snarky</option>
+      <option value="funny">Funny</option>
+      <option value="poetic">Poetic</option>
+      <option value="elegant">Elegant</option>
+      <option value="sassy">Sassy</option>
+      <option value="gracious">Gracious</option>
+      <option value="inspirational">Inspirational</option>
+      <option value="chill">Chill</option>
+    </select>
+  </div>
 
-      const eraColors = {
-        debut: "#e1f0e7",
-        fearless: "#fef6cc",
-        speaknow: "#e8dff3",
-        red: "#ffdada",
-        "1989": "#c5e3f7",
-        reputation: "#c1c1c1",
-        lover: "#fad0db",
-        folklore: "#f4f4f4",
-        evermore: "#ddd2cc"
-      };
+  <div class="response-container" id="responseContainer"></div>
+  <div class="lyric-footer" id="lyricFooter"></div>
 
-      function changeEra(era) {
-        if (eraColors[era]) {
-          document.body.style.backgroundColor = eraColors[era];
-        } else {
-          document.body.style.backgroundColor = "";
-        }
-      }
-    </script>
-  </body>
+  <script>
+    function generateClapback() {
+      const input = document.getElementById("input").value;
+      const clapbackType = document.getElementById("clapbackType").value;
+
+      fetch("http://127.0.0.1:5000/clapback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ sentiment: clapbackType })
+      })
+        .then(response => response.json())
+        .then(data => {
+          const container = document.getElementById("responseContainer");
+          container.innerHTML = "";
+
+          data.responses.forEach(text => {
+            const box = document.createElement("div");
+            box.className = "response";
+            box.innerHTML = `${text}<div class='meta'>Style: ${clapbackType}</div><button class='copy-btn' onclick='copyToClipboard(\`${text}\`)'>Copy</button>`;
+            container.appendChild(box);
+          });
+
+          document.getElementById("lyricFooter").textContent = data.footer || "";
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("Oops! Something went wrong getting your clapback.");
+        });
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => alert("Copied to clipboard!"));
+    }
+  </script>
+</body>
 </html>
-
