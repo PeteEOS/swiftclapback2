@@ -176,31 +176,29 @@ Let me channel Taylor and serve a response worthy of the spotlight.</h1>
     <div class="lyric-footer" id="lyricFooter"></div>
 
     <script>
-      const lyricsBySentiment = {
-        snarky: ["Darling, I'm a nightmare dressed like a daydream.", "Honey, your shade’s outdated and I’m out of patience."],
-        funny: ["I'm sorry, I only talk to people who sparkle."],
-        poetic: ["I've been the archer, I've been the prey.", "I remember it all too well."],
-        gracious: ["Call it what you want, but I call it confidence."],
-        elegant: ["You can walk away, but I’m still the queen of this story."],
-        sassy: ["If I showed up at your party, would you have something smart to say then?"],
-        inspirational: ["We're happy, free, confused and lonely at the same time."],
-        chill: ["The old me can't come to the phone right now... she's thriving."]
-      };
-
-      function generateClapback() {
+      async function generateClapback() {
         const container = document.getElementById("responseContainer");
         container.innerHTML = "";
-        const clapbackType = document.getElementById("clapbackType").value;
-        const lyricPool = lyricsBySentiment[clapbackType] || [];
-        const shuffled = lyricPool.sort(() => 0.5 - Math.random()).slice(0, 3);
-        shuffled.forEach((text) => {
-          const box = document.createElement("div");
-          box.className = "response";
-          box.innerHTML = `${text}<div class='meta'>Style: ${clapbackType}</div><button class='copy-btn' onclick='copyToClipboard("${text}")'>Copy</button>`;
-          container.appendChild(box);
-        });
-        const footerLyric = lyricPool[Math.floor(Math.random() * lyricPool.length)] || "I bury hatchets, but I keep maps of where I put them.";
-        document.getElementById("lyricFooter").textContent = footerLyric;
+        const sentiment = document.getElementById("clapbackType").value;
+
+        try {
+          const response = await fetch(`http://localhost:5000/generate?sentiment=${sentiment}`);
+          const data = await response.json();
+
+          if (data.responses && data.responses.length > 0) {
+            data.responses.forEach((text) => {
+              const box = document.createElement("div");
+              box.className = "response";
+              box.innerHTML = `${text}<div class='meta'>Style: ${sentiment}</div><button class='copy-btn' onclick='copyToClipboard("${text}")'>Copy</button>`;
+              container.appendChild(box);
+            });
+            document.getElementById("lyricFooter").textContent = data.footer;
+          } else {
+            container.innerHTML = "<p>No responses found. Try a different style.</p>";
+          }
+        } catch (err) {
+          container.innerHTML = `<p>Error fetching response: ${err.message}</p>`;
+        }
       }
 
       function copyToClipboard(text) {
@@ -229,3 +227,4 @@ Let me channel Taylor and serve a response worthy of the spotlight.</h1>
     </script>
   </body>
 </html>
+
