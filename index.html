@@ -176,25 +176,36 @@ Let me channel Taylor and serve a response worthy of the spotlight.</h1>
     <div class="lyric-footer" id="lyricFooter"></div>
 
     <script>
-      const responses = [
-        "Darling, I'm a nightmare dressed like a daydream.",
-        "You can walk away, but I’m still the queen of this story.",
-        "I don't have time for your mess — I'm busy shining.",
-        "If I showed up at your party, would you have something smart to say then?",
-        "The old me can't come to the phone right now... she's thriving.",
-        "I'm sorry, I only talk to people who sparkle.",
-        "Call it what you want, but I call it confidence.",
-        "Honey, your shade’s outdated and I’m out of patience."
-      ];
+      const lyricsBySentiment = {
+        snarky: ["Darling, I'm a nightmare dressed like a daydream.", "Honey, your shade’s outdated and I’m out of patience."],
+        funny: ["I'm sorry, I only talk to people who sparkle."],
+        poetic: ["I've been the archer, I've been the prey.", "I remember it all too well."],
+        gracious: ["Call it what you want, but I call it confidence."],
+        elegant: ["You can walk away, but I’m still the queen of this story."],
+        sassy: ["If I showed up at your party, would you have something smart to say then?"],
+        inspirational: ["We're happy, free, confused and lonely at the same time."],
+        chill: ["The old me can't come to the phone right now... she's thriving."]
+      };
 
-      const lyrics = [
-        "I swear I don't love the drama, it loves me.",
-        "I remember it all too well.",
-        "Darling, I'm a nightmare dressed like a daydream.",
-        "We're happy, free, confused and lonely at the same time.",
-        "I've been the archer, I've been the prey.",
-        "I bury hatchets, but I keep maps of where I put them."
-      ];
+      function generateClapback() {
+        const container = document.getElementById("responseContainer");
+        container.innerHTML = "";
+        const clapbackType = document.getElementById("clapbackType").value;
+        const lyricPool = lyricsBySentiment[clapbackType] || [];
+        const shuffled = lyricPool.sort(() => 0.5 - Math.random()).slice(0, 3);
+        shuffled.forEach((text) => {
+          const box = document.createElement("div");
+          box.className = "response";
+          box.innerHTML = `${text}<div class='meta'>Style: ${clapbackType}</div><button class='copy-btn' onclick='copyToClipboard("${text}")'>Copy</button>`;
+          container.appendChild(box);
+        });
+        const footerLyric = lyricPool[Math.floor(Math.random() * lyricPool.length)] || "I bury hatchets, but I keep maps of where I put them.";
+        document.getElementById("lyricFooter").textContent = footerLyric;
+      }
+
+      function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => alert("Copied to clipboard!"));
+      }
 
       const eraColors = {
         debut: "#f0f8f4",
@@ -208,25 +219,6 @@ Let me channel Taylor and serve a response worthy of the spotlight.</h1>
         evermore: "#e8e0dc"
       };
 
-      function generateClapback() {
-        const container = document.getElementById("responseContainer");
-        container.innerHTML = "";
-        const clapbackType = document.getElementById("clapbackType").value;
-        const shuffled = responses.sort(() => 0.5 - Math.random()).slice(0, 3);
-        shuffled.forEach((text) => {
-          const box = document.createElement("div");
-          box.className = "response";
-          box.innerHTML = `${text}<div class='meta'>Style: ${clapbackType}</div><button class='copy-btn' onclick='copyToClipboard("${text}")'>Copy</button>`;
-          container.appendChild(box);
-        });
-        const lyric = lyrics[Math.floor(Math.random() * lyrics.length)];
-        document.getElementById("lyricFooter").textContent = lyric;
-      }
-
-      function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => alert("Copied to clipboard!"));
-      }
-
       function changeEra(era) {
         if (eraColors[era]) {
           document.body.style.backgroundColor = eraColors[era];
@@ -237,3 +229,4 @@ Let me channel Taylor and serve a response worthy of the spotlight.</h1>
     </script>
   </body>
 </html>
+
