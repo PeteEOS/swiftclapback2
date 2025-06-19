@@ -11,7 +11,8 @@
         --text-light: #333;
         --bg-dark: #1a1a1a;
         --text-dark: #f5f5f5;
-        --accent: #d6336c;
+        --accent: #ffffff;
+        --accent-text: #000000;
         --secondary: #555;
       }
 
@@ -71,7 +72,7 @@
 
       button, select {
         background-color: var(--accent);
-        color: white;
+        color: var(--accent-text);
         border: none;
         padding: 0.75rem 1.5rem;
         font-size: 1rem;
@@ -81,7 +82,7 @@
       }
 
       button:hover, select:hover {
-        background-color: #b92d5a;
+        background-color: #e0e0e0;
       }
 
       .response-container {
@@ -103,8 +104,8 @@
         top: 1rem;
         right: 1rem;
         background: none;
-        border: 1px solid var(--accent);
-        color: var(--accent);
+        border: 1px solid var(--accent-text);
+        color: var(--accent-text);
         padding: 0.25rem 0.5rem;
         cursor: pointer;
         border-radius: 4px;
@@ -116,21 +117,6 @@
         font-style: italic;
         color: var(--secondary);
         text-align: center;
-      }
-
-      .share-buttons {
-        display: flex;
-        gap: 1rem;
-        margin-top: 1rem;
-        justify-content: center;
-      }
-
-      .share-buttons button {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-        border: 1px solid var(--accent);
-        background: none;
-        color: var(--accent);
       }
 
       @media (max-width: 600px) {
@@ -148,7 +134,17 @@
     <p class="description">Drop your comment here. Choose your mood. Let me channel Taylor and serve a response worthy of the spotlight. I've got you queens and kings.</p>
     <textarea id="input" placeholder="Paste a comment you need a clapback for..."></textarea>
     <div class="controls">
-      <button onclick="generateClapback()">Clapback</button>
+      <button onclick="generateClapback()">Get Clapback</button>
+      <select id="clapbackType">
+        <option value="snarky">Snarky</option>
+        <option value="funny">Funny</option>
+        <option value="poetic">Poetic</option>
+        <option value="elegant">Elegant</option>
+        <option value="sassy">Sassy</option>
+        <option value="gracious">Gracious</option>
+        <option value="inspirational">Inspirational</option>
+        <option value="chill">Chill</option>
+      </select>
       <select id="eraSelect" onchange="changeEra(this.value)">
         <option value="default">Toggle Era</option>
         <option value="debut">Debut</option>
@@ -163,10 +159,6 @@
       </select>
     </div>
     <div class="response-container" id="responseContainer"></div>
-    <div class="share-buttons">
-      <button onclick="shareResponse('twitter')">Share on Twitter</button>
-      <button onclick="shareResponse('facebook')">Share on Facebook</button>
-    </div>
     <div class="lyric-footer" id="lyricFooter"></div>
 
     <script>
@@ -191,15 +183,15 @@
       ];
 
       const eraColors = {
-        debut: "#a8e6a3",
-        fearless: "#fdd835",
-        speaknow: "#b39ddb",
-        red: "#ef5350",
-        "1989": "#64b5f6",
-        reputation: "#212121",
+        debut: "#e3f2e1",
+        fearless: "#fff9c4",
+        speaknow: "#ede7f6",
+        red: "#ffcccb",
+        "1989": "#bbdefb",
+        reputation: "#616161",
         lover: "#f8bbd0",
-        folklore: "#cfd8dc",
-        evermore: "#8d6e63"
+        folklore: "#f5f5f5",
+        evermore: "#d7ccc8"
       };
 
       function generateClapback() {
@@ -227,21 +219,7 @@
           document.body.style.backgroundColor = "";
         }
       }
-
-      function shareResponse(platform) {
-        const container = document.getElementById("responseContainer");
-        const latest = container.querySelector(".response");
-        if (!latest) return alert("Generate a response first!");
-        const text = latest.textContent.replace("Copy", "").trim();
-        let url = "";
-        const encodedText = encodeURIComponent(text);
-        if (platform === "twitter") {
-          url = `https://twitter.com/intent/tweet?text=${encodedText}`;
-        } else if (platform === "facebook") {
-          url = `https://www.facebook.com/sharer/sharer.php?u=&quote=${encodedText}`;
-        }
-        window.open(url, '_blank');
-      }
     </script>
   </body>
 </html>
+
