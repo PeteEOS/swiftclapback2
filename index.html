@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SwiftClapBack</title>
+</head>
+<body>
+  <h1>Welcome to SwiftClapBack</h1>
+  <p>Drop a rude comment below and choose your response style:</p>
+
+  <textarea id="userInput" rows="4" cols="50" placeholder="Type the comment here..."></textarea>
+  <br/><br/>
+  <label for="tone">Choose your vibe:</label>
+  <select id="tone">
+    <option value="funny">Funny</option>
+    <option value="snarky">Snarky</option>
+    <option value="poetic">Poetic</option>
+    <option value="gracious">Gracious</option>
+    <option value="empowered">Empowered</option>
+    <option value="hopeful">Hopeful</option>
+    <option value="chill">Chill</option>
+    <option value="mysterious">Mysterious</option>
+  </select>
+  <br/><br/>
+  <button onclick="generateReply()">Get ClapBack</button>
+
+  <h2>Your Reply:</h2>
+  <p id="reply"></p>
+
+  <script>
+    function generateReply() {
+      const comment = document.getElementById('userInput').value;
+      const tone = document.getElementById('tone').value;
+      const replyBox = document.getElementById('reply');
+
+      if (!comment) {
+        replyBox.innerText = "Speak now... or forever hold your post.";
+        return;
+      }
+
+      replyBox.innerText = `(${tone.toUpperCase()} Mode) ✨ Coming soon: Your SwiftClapBack...`;
+    }
+  </script>
+
+  <footer>
+    <p style="margin-top: 40px; font-style: italic;">I've got you, queens and kings.</p>
+  </footer>
+</body>
+</html>
