@@ -3,6 +3,7 @@ from flask_cors import CORS
 import pandas as pd
 import random
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -48,8 +49,8 @@ def generate_clapback():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# ✅ Proper block for launching app on Render
 if __name__ == "__main__":
     print("SwiftClapback backend is running. Use the /clapback endpoint.")
-    import os
-port = int(os.environ.get("PORT", 5000))
-app.run(host='0.0.0.0', port=port, debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
