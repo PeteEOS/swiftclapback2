@@ -50,4 +50,6 @@ def generate_clapback():
 
 if __name__ == "__main__":
     print("SwiftClapback backend is running. Use the /clapback endpoint.")
-    app.run(debug=True)
+    import os
+port = int(os.environ.get("PORT", 5000))
+app.run(host='0.0.0.0', port=port, debug=True)
